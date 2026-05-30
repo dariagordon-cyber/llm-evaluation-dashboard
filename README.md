@@ -33,7 +33,7 @@ Start the FastAPI backend first, then start the frontend:
 npm run dev
 ```
 
-Open the local Vite URL shown in the terminal.
+Open the Vite URL shown in the terminal, usually `http://127.0.0.1:5173`.
 
 ## Features
 
@@ -79,7 +79,7 @@ When criteria are entered as comma-separated text, such as `correctness, clarity
 
 ## API Routes Used
 
-The frontend calls:
+The frontend calls these proxied routes:
 
 - `POST /api/evaluate`
 - `POST /api/batch-evaluate`
