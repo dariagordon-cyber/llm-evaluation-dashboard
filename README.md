@@ -1,44 +1,98 @@
 # LLM Evaluation Dashboard
 
-A separate React + Vite frontend for an existing FastAPI backend running at:
+React + Vite frontend for the LLM Evaluation FastAPI backend.
+
+## Prerequisites
+
+- Node.js 18+
+- FastAPI backend running at `http://127.0.0.1:8000`
+
+Check the backend:
 
 ```bash
-http://127.0.0.1:8000
+curl http://127.0.0.1:8000/health
 ```
 
-The app includes:
+Expected response:
 
-- Single evaluation form
-- Batch evaluation form
-- Evaluation history view
-- Basic analytics for average score, pass rate, and common error types
+```json
+{"status":"ok"}
+```
 
-## Getting Started
+## Install
 
 ```bash
 npm install
+```
+
+## Run
+
+Start the FastAPI backend first, then start the frontend:
+
+```bash
 npm run dev
 ```
 
 Open the local Vite URL shown in the terminal.
 
-## Backend Configuration
+## Features
 
-By default, API requests are sent through the Vite proxy at `/api`.
+- Single evaluation form
+- Batch evaluation form
+- Evaluation history view
+- Analytics for average score, pass rate, and common error types
 
-The proxy forwards requests to `http://127.0.0.1:8000` and removes the `/api` prefix:
+## API Proxy
+
+The frontend uses relative `/api` requests. Vite proxies those requests to the backend at `http://127.0.0.1:8000`.
+
+Proxy rewrites:
 
 - `/api/evaluate` -> `/evaluate`
 - `/api/batch-evaluate` -> `/batch-evaluate`
 - `/api/evaluations` -> `/evaluations`
 - `/api/health` -> `/health`
 
-## Expected Backend Routes
+This avoids requiring backend CORS changes during local development.
 
-The frontend API client currently calls:
+## Request Payload
 
-- `POST /evaluate`
-- `POST /batch-evaluate`
-- `GET /evaluations`
+Single and batch evaluations are sent using the backend request schema:
 
-If the FastAPI backend uses different paths, update `src/api.js`.
+```json
+{
+  "task": "Explain photosynthesis",
+  "model_answer": "Photosynthesis is how plants make food from sunlight.",
+  "reference_answer": "Photosynthesis converts light energy into chemical energy.",
+  "evaluation_mode": "general_answer",
+  "criteria": [
+    {
+      "name": "correctness",
+      "description": "Evaluate correctness.",
+      "weight": 0.33
+    }
+  ]
+}
+```
+
+When criteria are entered as comma-separated text, such as `correctness, clarity, completeness`, the frontend converts them into criterion objects and distributes weights evenly.
+
+## API Routes Used
+
+The frontend calls:
+
+- `POST /api/evaluate`
+- `POST /api/batch-evaluate`
+- `GET /api/evaluations`
+
+## Troubleshooting
+
+If the frontend shows a fetch or proxy error, confirm the backend is running:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Make sure the frontend is opened through the Vite dev server, not by opening `index.html` directly.
+
+Restart the frontend dev server after changing `vite.config.js`.
