@@ -4,7 +4,7 @@ React + Vite frontend for the LLM Evaluation FastAPI backend.
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20.19+ or 22.12+
 - FastAPI backend running at `http://127.0.0.1:8000`
 
 Check the backend:
